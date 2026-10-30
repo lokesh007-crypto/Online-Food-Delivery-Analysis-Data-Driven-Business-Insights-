@@ -356,18 +356,23 @@ st.caption("Card is the most-used payment method, followed by Wallet, COD and UP
 
 st.subheader("15. Cancellation Reason Analysis")
 
-cancel_reason = df_filtered["Cancellation_Reason"].apply(
-    lambda x: x if x != "Not_Applicable" else None
-).value_counts()
+cancel_reason = df_filtered["Cancellation_Reason"].replace(
+    "Not_Applicable", pd.NA
+).dropna().value_counts()
 
-fig, ax = plt.subplots(figsize=(8, 5))
-cancel_reason.plot(kind="bar", ax=ax)
-ax.set_xlabel("Cancellation_Reason")
-ax.set_ylabel("Count")
-ax.set_title("Cancellation Reason Analysis")
-ax.tick_params(axis='x', rotation=0)
-st.pyplot(fig)
-plt.close(fig)
+if not cancel_reason.empty:
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    cancel_reason.plot(kind="bar", ax=ax)
+
+    ax.set_xlabel("Cancellation Reason")
+    ax.set_ylabel("Count")
+    ax.set_title("Cancellation Reason Analysis")
+    ax.tick_params(axis='x', rotation=0)
+
+    st.pyplot(fig)
+    plt.close(fig)
 
 st.caption("Late Delivery, Customer Cancelled and Restaurant Issue are the main cancellation categories.")
 
